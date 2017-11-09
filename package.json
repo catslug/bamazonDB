@@ -1,0 +1,23 @@
+{
+  "name": "bamazondb",
+  "version": "1.0.0",
+  "description": "a node command line database purchasing app with The Best Transporters around",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catslug/bamazonDB.git"
+  },
+  "author": "Lindsay Wall",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/catslug/bamazonDB/issues"
+  },
+  "homepage": "https://github.com/catslug/bamazonDB#readme",
+  "dependencies": {
+    "inquirer": "^3.3.0",
+    "mysql": "^2.15.0"
+  }
+}
