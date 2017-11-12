@@ -137,7 +137,7 @@ function addProduct() {
 					stock_quantity: answers.productStock
 				}
 				connection.query("INSERT INTO products SET ?", newProduct, function(err, result) {
-					console.log("You added a product at the number which has a new ID of " + result.insertId + ".");
+					console.log("You added a product which has a new ID of " + result.insertId + ".");
 					continueManaging();
 				})
 			}
