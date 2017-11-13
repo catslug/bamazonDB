@@ -156,7 +156,7 @@ function continueManaging() {
 				startManagerInterface();
 			} else {
 				connection.end();
-				return console.log("Thanks for all that you do, Navigator. Goodbye.")
+				return console.log("Thanks for all that you do, Navigator. Goodbye.");
 			}
 		})
 }

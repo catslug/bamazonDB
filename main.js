@@ -77,19 +77,19 @@ function howManyToBuy(product) {
 }
 
 function completePurchase(quantity, product) {
-	connection.query("SELECT id, stock_quantity, price FROM products WHERE product_name=?", [product], function(err, result) {
+	connection.query("SELECT id, stock_quantity, price, department_name FROM products WHERE product_name=?", [product], function(err, result) {
 		if (err) throw err;
 		else if (parseFloat(quantity) > parseFloat(result[0].stock_quantity)) {
 			console.log("Oopsies. We don't have that many left."); 
-			askIfNeedAllStock(result[0].id, result[0].stock_quantity, product, result[0].price);
+			askIfNeedAllStock(result[0].id, result[0].stock_quantity, product, result[0].price, result[0].department_name);
 		} else {
 			decrementStock(result[0].id, quantity, result[0].stock_quantity);
-			alertPrice(quantity, result[0].price);
+			alertPrice(result[0].department_name, quantity, result[0].price);
 		}
 	})
 }
 
-function askIfNeedAllStock(id, stock, product, price) {
+function askIfNeedAllStock(prodID, stock, product, price, dept) {
 	inquirer.prompt([
 	{
 		type: "confirm",
@@ -98,8 +98,8 @@ function askIfNeedAllStock(id, stock, product, price) {
 	}
 		]).then(function(answers) {
 			if (answers.giveMeAll) {
-				decrementStock(id, stock, stock);
-				alertPrice(stock, price);
+				decrementStock(prodID, stock, stock);
+				alertPrice(dept, stock, price);
 			} else {
 				howManyToBuy(product);
 			}
@@ -113,10 +113,22 @@ function decrementStock(prodID, quantity, stock) {
 	} 
 }
 
-function alertPrice(quantity, price) {
+function alertPrice(dept, quantity, price) {
 	var customerInvoice = parseFloat(quantity) * parseFloat(price);
 	console.log("You've completed your purchase for " + customerInvoice);
-	askIfKeepShopping();
+	updateDeptSales(dept, customerInvoice);
+}
+
+function updateDeptSales(dept, customerInvoice) {
+	connection.query("SELECT product_sales FROM departments WHERE department_name=?", [dept], function(err, result) {
+		if (err) throw err;
+		var newProductSales = parseFloat(result[0].product_sales) + parseFloat(customerInvoice);
+		connection.query("UPDATE departments SET product_sales=? WHERE department_name=?", [newProductSales, dept], function (err, result) {
+			if (err) throw err;
+			askIfKeepShopping();
+		})
+	})
+
 }
 
 function askIfKeepShopping() {
